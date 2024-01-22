@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/providers/game_page_provider.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  final String difficultyLevel;
+
+  const GamePage({super.key, required this.difficultyLevel});
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -13,28 +15,21 @@ class _GamePageState extends State<GamePage> {
   late double _deviceHeight, _deviceWidth;
   GamePageProvider? _pageProvider;
 
-  late String answer;
-
-  @override
-  void initState() {
-    answer = '';
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
 
     return ChangeNotifierProvider(
-      create: (_context) => GamePageProvider(context: context),
+      create: (context) => GamePageProvider(
+          context: context, difficultyLevel: widget.difficultyLevel),
       child: _buildUI(),
     );
   }
 
   Widget _buildUI() {
-    return Builder(builder: (_context) {
-      _pageProvider = _context.watch<GamePageProvider>();
+    return Builder(builder: (context) {
+      _pageProvider = context.watch<GamePageProvider>();
       if (_pageProvider!.questions != null) {
         return Scaffold(
           appBar: AppBar(
